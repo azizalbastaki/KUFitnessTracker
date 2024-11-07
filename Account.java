@@ -11,8 +11,8 @@ public class Account {
     public String getId(){return id;}
     public String getPassword(){return password;}
 
-    public void setName(name){this.name = name;}
-    public void setId(id){this.id = id;}
-    public void setPassword(password){this.password = password;}
+    public void setName(String name){this.name = name;}
+    public void setId(String id){this.id = id;}
+    public void setPassword(String password){this.password = password;}
     
 }
