@@ -1,31 +1,18 @@
 public class Account {
-    private String name;
-    private double id;
-    private String password; 
-
-    public Account(String name, double id, String password) {
+    private String name, id, password; 
+    
+    public Account(String name, String id, String password) {
         this.name = name;
         this.id = id;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName(){return name;}
+    public String getId(){return id;}
+    public String getPassword(){return password;}
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getId() {
-        return id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setName(name){this.name = name;}
+    public void setId(id){this.id = id;}
+    public void setPassword(password){this.password = password;}
+    
 }
