@@ -1,11 +1,27 @@
 public class Account {
     private String name;
-    private String id;
+    private double id;
     private String password; 
 
-    public Account(String name, String id, String password) {
+    public Account(String name, double id, String password) {
         this.name = name;
         this.id = id;
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 }
