@@ -6,14 +6,16 @@ public class User extends Account {
     private String email;
     private Date birthdate;
     private int phoneNumber;
+    private String address;
     private List<Activity> activities = new ArrayList<>();
     private List<Goal> goals = new ArrayList<>();
     
-    public User(String name, String id, String password, Date birthdate, int phoneNumber, String email, Activity[] activities, Goal[] goals) {
+    public User(String name, String id, String password, Date birthdate, int phoneNumber, String email, String address, Activity[] activities, Goal[] goals) {
         super(name, id, password);
         this.birthdate = birthdate;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.address = address;
         this.activities = new ArrayList<>(Arrays.asList(activities));
         this.goals = new ArrayList<>(Arrays.asList(goals));
     }
@@ -40,6 +42,14 @@ public class User extends Account {
 
     public void setPhoneNumber(int phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<Activity> getActivities() {
