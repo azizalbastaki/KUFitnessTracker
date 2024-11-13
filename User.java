@@ -3,15 +3,20 @@ import java.io.*;
 
 public class User extends Account {
 
-    public User(String name, double id, String password) {
-        super(name, id, password);
-    }
-
     private String email;
     private Date birthdate;
     private int phoneNumber;
     private List<Activity> activities = new ArrayList<>();
     private List<Goal> goals = new ArrayList<>();
+    
+    public User(String name, String id, String password, Date birthdate, int phoneNumber, String email, Activity[] activities, Goal[] goals) {
+        super(name, id, password);
+        this.birthdate = birthdate;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.activities = new ArrayList<>(Arrays.asList(activities));
+        this.goals = new ArrayList<>(Arrays.asList(goals));
+    }
 
     public String getEmail() {
         return email;
