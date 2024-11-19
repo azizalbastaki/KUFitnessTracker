@@ -1,166 +1,143 @@
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
 
-public class User extends Account {
-    private static final String ID_FILE = "id_counter.txt";
-    private String email;
-    private KUDate birthdate;
-    private String phoneNumber;
-    private String address;
-    private String id;
-    private int totalCaloriesBurned;
-    private List<Activity> activities = new ArrayList<>();
-    private List<Goal> goals = new ArrayList<>();
-    
-    public User (String name, String email, String password, KUDate birthdate, String phoneNumber, String address) {
+public class Admin extends Account {
+    private final String adminId = "1";
+
+    // Constructors
+    public Admin() {
+        super();
+    }
+
+    public Admin(String name, String password) {
         super(name, password);
-        this.birthdate = birthdate;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.activities = new ArrayList<>();
-        this.goals = new ArrayList<>();
-        id = generateUniqueId();
-    }
-        
-    public User(String name, String password, KUDate birthdate, String phoneNumber, String email, String address, Activity[] activities, Goal[] goals) {
-        super(name, password);
-        this.birthdate = birthdate;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.totalCaloriesBurned = 0;
-        this.activities = new ArrayList<>(Arrays.asList(activities));
-        this.goals = new ArrayList<>(Arrays.asList(goals));
     }
 
-    private static String generateUniqueId() {
-        int currentId = 1000; // Default starting ID
-        File file = new File(ID_FILE);
-
-        try {
-            // Check if the file exists, otherwise create it
-            if (!file.exists()) {
-                file.createNewFile();
-                writeIdToFile(currentId); // Write the starting ID
-            } else {
-                // Read the last used ID
-                Scanner reader = new Scanner(new FileReader(file));
-                currentId = Integer.parseInt(reader.nextLine().trim());
-                reader.close();
-            }
-
-            // Increment and save the new ID
-            int newId = currentId + 1;
-            writeIdToFile(newId);
-
-            return "KU" + currentId; // Return unique ID
-        } catch (IOException | NumberFormatException e) {
-            throw new RuntimeException("Error generating unique ID: " + e.getMessage());
-        }
-    }
-
-    private static void writeIdToFile(int id) throws IOException {
-        PrintWriter writer = new PrintWriter(ID_FILE);
-        writer.write(String.valueOf(id));
-        writer.close();
-    }
-
-    public void generateProgressReport() {
-        String fileName = this.id + "_Progress_Report.txt"; // Unique file for each user
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            // Write user information and progress data to the file
-            writer.println("Progress Report for User: " + getEmail());
-            writer.println("User ID: " + this.id);
-            writer.println("Total Calories Burned: " + this.totalCaloriesBurned);
-            writer.println("\nFitness Activities:");
-            if (activities.isEmpty()) {
-                writer.println("No activities logged yet.");
-            } else {
-                for (Activity activity : activities) {
-                    writer.println("- " + activity);
-                }
-            }
-            writer.println("\nGoals:");
-            if (goals.isEmpty()) {
-                writer.println("No goals set yet.");
-            } else {
-                for (Goal goal : goals) {
-                    writer.println("- " + goal);
-                }
-            }
-            writer.println("\nThank you for using the KU Fitness Tracker!");
-            System.out.println("Progress report saved as: " + fileName); // Confirmation message
-        } catch (IOException e) {
-            System.err.println("Error generating progress report: " + e.getMessage());
-        }
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public KUDate getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(KUDate birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhone(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public List<Activity> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
-    }
-
-    public List<Goal> getGoals() {
-        return goals;
-    }
-
-    public void setGoals(List<Goal> goals) {
-        this.goals = goals;
-    }
-    public void logCalories(int calories) {
-        this.totalCaloriesBurned += calories;
-    }
-    public int getTotalCaloriesBurned() {
-        return totalCaloriesBurned;
-    }
-
-    public void addGoal(Goal goal) {
+    // Method to set the status of a goal
+    public void setGoalStatus(Goal goal, String status) {
         if (goal != null) {
-            this.goals.add(goal); // Append the goal to the user's goals list
-            System.out.println("Goal added successfully: " + goal);
+            goal.setStatus(status);
+            System.out.println("Goal status updated to: " + status);
         } else {
             System.out.println("Goal cannot be null.");
         }
     }
 
-	public void addActivity(Activity activity) {
-		
-		
-	}
+    // Method to get a user by name
+    public User getUser(String name) {
+        for (User user : Database.getUsers()) { // Assuming a static database class
+            if (user.getName().equalsIgnoreCase(name)) {
+                return user;
+            }
+        }
+        System.out.println("User not found.");
+        return null;
+    }
+
+    // Method to add a user
+    public void addUser(User user) {
+        if (user != null) {
+            Database.addUser(user); // Assuming a static database class
+            System.out.println("User added successfully.");
+        } else {
+            System.out.println("User cannot be null.");
+        }
+    }
+
+    // Method to delete a user
+    public void deleteUser(User user) {
+        if (user != null) {
+            Database.removeUser(user); // Assuming a static database class
+            System.out.println("User deleted successfully.");
+        } else {
+            System.out.println("User cannot be null.");
+        }
+    }
+
+    // Method to edit user details
+    public User editUser(User user) {
+        if (user != null) {
+            // Modify the user details (example: changing the name)
+            user.setName(user.getName() + "_updated");
+            System.out.println("User details updated.");
+            return user;
+        } else {
+            System.out.println("User cannot be null.");
+            return null;
+        }
+    }
+
+    // Method to view an activity
+    public String viewActivity(Activity activity) {
+        if (activity != null) {
+            return activity.toString();
+        } else {
+            return "Activity not found.";
+        }
+    }
+
+    // Method to add a goal to a user
+    public void addGoal(Goal goal, User user) {
+        if (user != null && goal != null) {
+            user.addGoal(goal);
+            System.out.println("Goal added successfully.");
+        } else {
+            System.out.println("User or Goal cannot be null.");
+        }
+    }
+
+    // Method to add an activity to a user
+    public void addActivity(Activity activity, User user) {
+        if (user != null && activity != null) {
+            user.addActivity(activity);
+            System.out.println("Activity added successfully.");
+        } else {
+            System.out.println("User or Activity cannot be null.");
+        }
+    }
+
+    // Method to delete an activity
+    public void deleteActivity(Activity activity) {
+        if (activity != null) {
+            Database.removeActivity(activity); // Assuming a static database class
+            System.out.println("Activity deleted successfully.");
+        } else {
+            System.out.println("Activity cannot be null.");
+        }
+    }
+
+    // Method to delete a goal
+    public void deleteGoal(Goal goal) {
+        if (goal != null) {
+            Database.removeGoal(goal); // Assuming a static database class
+            System.out.println("Goal deleted successfully.");
+        } else {
+            System.out.println("Goal cannot be null.");
+        }
+    }
+
+    // Method to edit a goal
+    public Goal editGoal(Goal goal) {
+        if (goal != null) {
+            // Example: Update the description
+            goal.setGoalDescription(goal.getGoalDescription() + " (edited)");
+            System.out.println("Goal edited successfully.");
+            return goal;
+        } else {
+            System.out.println("Goal cannot be null.");
+            return null;
+        }
+    }
+
+    // Method to edit an activity
+    public Activity editActivity(Activity activity) {
+        if (activity != null) {
+            // Example: Update the activity details
+            activity.setName(activity.getName() + " (edited)");
+            System.out.println("Activity edited successfully.");
+            return activity;
+        } else {
+            System.out.println("Activity cannot be null.");
+            return null;
+        }
+    }
 }
