@@ -62,7 +62,7 @@ public class UserPage extends JFrame implements ActionListener {
         fitnessButton = createSidebarButton("Fitness Activity");
         goalButton = createSidebarButton("Goals");
         logoutButton = createSidebarButton("Logout");
-        logoutButton.setMaximumSize(new Dimension(200, 30));
+        //logoutButton.setMaximumSize(new Dimension(200, 30));
         logoutButton.setVisible(true);
         left.setBorder(BorderFactory.createEmptyBorder(0,20,20,20));
 
@@ -73,8 +73,8 @@ public class UserPage extends JFrame implements ActionListener {
         leftNorth.add(profileButton);
         leftNorth.add(fitnessButton);
         leftNorth.add(goalButton);
+        leftNorth.add(logoutButton);
         left.add(leftNorth, BorderLayout.NORTH);
-        left.add(logoutButton, BorderLayout.SOUTH);
         left.revalidate();
         left.repaint();
 
