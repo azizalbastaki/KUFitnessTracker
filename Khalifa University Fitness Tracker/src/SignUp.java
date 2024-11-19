@@ -226,7 +226,7 @@ public class SignUp extends JFrame implements ActionListener {
                     day = calendar.get(Calendar.DAY_OF_MONTH);
                     month = calendar.get(Calendar.MONTH) + 1; // Months are 0-based in Calendar
                     year = calendar.get(Calendar.YEAR);}
-                Date bd = new Date(day, month, year);
+                KUDate bd = new KUDate(day, month, year);
                 newUser = new User(nametf.getText(), emailtf.getText(), (String) passtf.getText(), bd, phonetf.getText(), addresstf.getText());
                 Main.users.add(newUser);
                 JOptionPane.showMessageDialog(null, "Your account has been successfuly signed up!", "Singed Up Successfully!", JOptionPane.INFORMATION_MESSAGE);
