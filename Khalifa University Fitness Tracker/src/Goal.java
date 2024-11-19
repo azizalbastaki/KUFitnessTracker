@@ -3,11 +3,11 @@ public class Goal
 {
 	private String goalId;
 	private String goalDescription;
-	private Date startDate;
-	private Date endDate;
+	private KUDate startDate;
+	private KUDate endDate;
 	private String status;
 	public Goal() {}
-	public Goal(String goalId, String goalDescription, Date startDate, Date endDate, String status) 
+	public Goal(String goalId, String goalDescription, KUDate startDate, KUDate endDate, String status) 
 	{
 		this.goalId = goalId;
 		this.goalDescription = goalDescription;
@@ -27,16 +27,16 @@ public class Goal
 	public void setGoalDescription(String goalDescription) {
 		this.goalDescription = goalDescription;
 	}
-	public Date getStartDate() {
+	public KUDate getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Date startDate) {
+	public void setStartDate(KUDate startDate) {
 		this.startDate = startDate;
 	}
-	public Date getEndDate() {
+	public KUDate getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(Date endDate) {
+	public void setEndDate(KUDate endDate) {
 		this.endDate = endDate;
 	}
 	public String getStatus() {
