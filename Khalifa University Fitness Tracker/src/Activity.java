@@ -3,11 +3,11 @@ public class Activity
 	private String name;
 	private Time duration;
 	private int caloriesBurned;
-	private Date activityDate;
+	private KUDate activityDate;
 	private String time;
 	public Activity(){}
 	
-	public Activity(String name2, Time duration, int calories, Date date2, String time2) {
+	public Activity(String name2, Time duration, int calories, KUDate date2, String time2) {
 		this.name=name2;
 		this.duration=duration;
 		this.caloriesBurned=calories;
@@ -32,10 +32,10 @@ public class Activity
 	public void setCaloriesBurned(int caloriesBurned) {
 		this.caloriesBurned = caloriesBurned;
 	}
-	public Date getActivityDate() {
+	public KUDate getActivityDate() {
 		return activityDate;
 	}
-	public void setActivityDate(Date activityDate) {
+	public void setActivityDate(KUDate activityDate) {
 		this.activityDate = activityDate;
 	}
 	public String getTime() {
