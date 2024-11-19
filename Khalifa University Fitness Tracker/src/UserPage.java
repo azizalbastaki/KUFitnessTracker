@@ -431,27 +431,28 @@ public class UserPage extends JFrame implements ActionListener {
         profileButton.setBackground(null);
         fitnessButton.setBackground(null);
         goalButton.setBackground(null);
+        Color deselectedColor = new Color(50, 50, 50);
 
         if (e.getSource() == profileButton) {
             cardLayout.show(cardPanel, "Profile");
             profileButton.setBackground(Color.CYAN);
             profileButton.setForeground(new Color(62, 8, 76));
-            goalButton.setForeground(new Color(255, 255, 255));
-            fitnessButton.setForeground(new Color(255, 255,255));
+            goalButton.setForeground(deselectedColor);
+            fitnessButton.setForeground(deselectedColor);
         } else if (e.getSource() == fitnessButton) {
             cardLayout.show(cardPanel, "Fitness");
             fitnessButton.setBackground(Color.CYAN);
-            profileButton.setForeground(new Color(255, 255, 255));
+            profileButton.setForeground(deselectedColor);
             fitnessButton.setForeground(new Color(62, 8, 76));
-            goalButton.setForeground(new Color(255, 255, 255));
+            goalButton.setForeground(deselectedColor);
 
 
         } else if (e.getSource() == goalButton) {
             cardLayout.show(cardPanel, "Goals");
             goalButton.setBackground(Color.CYAN);
             goalButton.setForeground(new Color(62, 8, 76));
-            profileButton.setForeground(new Color(255, 255, 255));
-            fitnessButton.setForeground(new Color(255, 255,255));
+            profileButton.setForeground(deselectedColor);
+            fitnessButton.setForeground(deselectedColor);
         }
 
         else if (e.getSource() == logoutButton) {
