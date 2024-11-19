@@ -44,7 +44,7 @@ public class Main extends JFrame {
 			int year = Integer.parseInt(line.next());
 			String phone = line.next();
 			String address = line.next();
-			User newUser = new User(name, email, pass, new Date(day, month, year), phone, address);
+			User newUser = new User(name, email, pass, new KUDate(day, month, year), phone, address);
 			users.add(newUser);
 			line.close();
 		}
