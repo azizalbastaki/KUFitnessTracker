@@ -1,84 +1,10 @@
-// import java.io.*;
-// import java.util.List;
-
-// public class User {
-//     private String id;
-//     private String name;
-//     private int totalCaloriesBurned;
-//     private List<String> fitnessActivities; // List to store user activities
-//     private List<String> goals; // List to store user goals
-
-//     public User(String name) {
-//         this.id = generateUniqueId(); // Assuming this method is implemented
-//         this.name = name;
-//         this.totalCaloriesBurned = 0;
-//         this.fitnessActivities = new ArrayList<>();
-//         this.goals = new ArrayList<>();
-//     }
-
-//     public void addFitnessActivity(String activity) {
-//         this.fitnessActivities.add(activity);
-//     }
-
-//     public void addGoal(String goal) {
-//         this.goals.add(goal);
-//     }
-
-//     public void logCalories(int calories) {
-//         this.totalCaloriesBurned += calories;
-//     }
-
-//     // Method to generate and save the progress report
-//     public void generateProgressReport() {
-//         String fileName = this.id + "_Progress_Report.txt"; // Unique file for each user
-//         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-//             // Write user information and progress data to the file
-//             writer.println("Progress Report for User: " + this.name);
-//             writer.println("User ID: " + this.id);
-//             writer.println("Total Calories Burned: " + this.totalCaloriesBurned);
-//             writer.println("\nFitness Activities:");
-//             if (fitnessActivities.isEmpty()) {
-//                 writer.println("No activities logged yet.");
-//             } else {
-//                 for (String activity : fitnessActivities) {
-//                     writer.println("- " + activity);
-//                 }
-//             }
-//             writer.println("\nGoals:");
-//             if (goals.isEmpty()) {
-//                 writer.println("No goals set yet.");
-//             } else {
-//                 for (String goal : goals) {
-//                     writer.println("- " + goal);
-//                 }
-//             }
-//             writer.println("\nThank you for using the KU Fitness Tracker!");
-//             System.out.println("Progress report saved as: " + fileName); // Confirmation message
-//         } catch (IOException e) {
-//             System.err.println("Error generating progress report: " + e.getMessage());
-//         }
-//     }
-
-//     public String getId() {
-//         return id;
-//     }
-
-//     public String getName() {
-//         return name;
-//     }
-
-//     public int getTotalCaloriesBurned() {
-//         return totalCaloriesBurned;
-//     }
-// }
-
 import java.util.*;
 import java.io.*;
 
 public class User extends Account {
     private static final String ID_FILE = "id_counter.txt";
     private String email;
-    private Date birthdate;
+    private KUDate birthdate;
     private String phoneNumber;
     private String address;
     private String id;
@@ -86,7 +12,7 @@ public class User extends Account {
     private List<Activity> activities = new ArrayList<>();
     private List<Goal> goals = new ArrayList<>();
     
-    public User (String name, String email, String password, Date birthdate, String phoneNumber, String address) {
+    public User (String name, String email, String password, KUDate birthdate, String phoneNumber, String address) {
         super(name, password);
         this.birthdate = birthdate;
         this.phoneNumber = phoneNumber;
@@ -97,7 +23,7 @@ public class User extends Account {
         id = generateUniqueId();
     }
         
-    public User(String name, String password, Date birthdate, String phoneNumber, String email, String address, Activity[] activities, Goal[] goals) {
+    public User(String name, String password, KUDate birthdate, String phoneNumber, String email, String address, Activity[] activities, Goal[] goals) {
         super(name, password);
         this.birthdate = birthdate;
         this.phoneNumber = phoneNumber;
@@ -178,11 +104,11 @@ public class User extends Account {
         this.email = email;
     }
 
-    public Date getBirthdate() {
+    public KUDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(KUDate birthdate) {
         this.birthdate = birthdate;
     }
 
