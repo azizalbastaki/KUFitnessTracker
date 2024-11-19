@@ -1,10 +1,10 @@
-public class Date 
+public class KUDate 
 {
 	private int day;
 	private int month;
 	private int year;
-	public Date() {}
-	public Date(int date,int month,int year) 
+	public KUDate() {}
+	public KUDate(int date,int month,int year) 
 	{
 		this.day=date;
 		this.month=month;
