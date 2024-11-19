@@ -1,107 +1,116 @@
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import com.lgooddatepicker.components.TimePicker;
-import com.lgooddatepicker.components.TimePickerSettings;
+import java.util.Scanner;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.Date;
-import java.util.Scanner;
 
-import javax.swing.table.*;
+import com.raven.swing.TimePicker;
 import com.toedter.calendar.JDateChooser;
 
-
 public class UserPage extends JFrame implements ActionListener {
-    private JPanel left, right, cardPanel, leftNorth;
+
+    // Sidebar and Card Layout Components
+    private JPanel leftPanel, rightPanel, cardPanel, sidebarButtonsPanel;
     private JButton profileButton, fitnessButton, goalButton, logoutButton;
     private CardLayout cardLayout;
 
-    // Profile components
+    // Profile Components
     private JTextField nametf, emailtf, phonetf, addresstf, idtf;
     private JPasswordField passtf;
     private JButton editButton, saveButton;
 
-    // Simulated user object
+    // Simulated User Object
     private User user;
 
+    /**
+     * Constructor: Initializes the UserPage frame and components.
+     */
     public UserPage() {
-        user = (User) Main.users.get(Main.idx);
+        user = (User) Main.users.get(Main.idx); // Simulated user object from Main
         initComponents();
     }
 
+    /**
+     * Initializes and organizes all components in the UserPage.
+     */
     private void initComponents() {
-        // Frame settings
         setTitle("User Page - KU Fitness Tracker");
         setSize(1280, 720);
         setMinimumSize(new Dimension(900, 600));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Left Panel (Sidebar)
-        left = new JPanel();
-        left.setBackground(new Color(62, 8, 76));
-        left.setLayout(new BorderLayout());
-        left.setPreferredSize(new Dimension(250, getHeight()));
+        setupSidebar();
+        setupCardPanel();
 
-        leftNorth = new JPanel();
-        leftNorth.setBackground(new Color(62, 8, 76));
-        leftNorth.setPreferredSize(new Dimension(250, getHeight()));
-        leftNorth.setLayout(new BoxLayout(leftNorth, BoxLayout.Y_AXIS));
-
-
-        JLabel kuIcon = new JLabel(new ImageIcon("KU logo22.jpg"), SwingConstants.LEFT);
-        kuIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
-        kuIcon.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
-
-        profileButton = createSidebarButton("My Profile");
-        fitnessButton = createSidebarButton("Fitness Activity");
-        goalButton = createSidebarButton("Goals");
-        logoutButton = createSidebarButton("Logout");
-        //logoutButton.setMaximumSize(new Dimension(200, 30));
-        logoutButton.setVisible(true);
-        left.setBorder(BorderFactory.createEmptyBorder(0,20,20,20));
-
-
-
-        leftNorth.add(kuIcon);
-        leftNorth.add(Box.createRigidArea(new Dimension(0, 20))); // Spacer
-        leftNorth.add(profileButton);
-        leftNorth.add(fitnessButton);
-        leftNorth.add(goalButton);
-        leftNorth.add(logoutButton);
-        left.add(leftNorth, BorderLayout.NORTH);
-        left.revalidate();
-        left.repaint();
-
-        // Right Panel (Main Content Area)
-        right = new JPanel();
-        cardLayout = new CardLayout();
-        cardPanel = new JPanel(cardLayout);
-
-        // Adding sub-panels to cardPanel
-        cardPanel.add(createProfilePanel(), "Profile");
-        cardPanel.add(createFitnessPanel(), "Fitness");
-        cardPanel.add(createGoalPanel(), "Goals");
-
-        right.setLayout(new BorderLayout());
-        right.add(cardPanel, BorderLayout.CENTER);
-
-        // Adding panels to frame
-        add(left, BorderLayout.WEST);
-        add(right, BorderLayout.CENTER);
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
+    /**
+     * Sets up the sidebar (left panel) with navigation buttons.
+     */
+    private void setupSidebar() {
+        leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setBackground(new Color(62, 8, 76));
+        leftPanel.setPreferredSize(new Dimension(250, getHeight()));
+
+        // Sidebar Buttons Panel
+        sidebarButtonsPanel = new JPanel();
+        sidebarButtonsPanel.setLayout(new BoxLayout(sidebarButtonsPanel, BoxLayout.Y_AXIS));
+        sidebarButtonsPanel.setBackground(new Color(62, 8, 76));
+
+        JLabel kuIcon = new JLabel(new ImageIcon("KU logo22.jpg"));
+        kuIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
+        kuIcon.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
+
+        // Create Navigation Buttons
+        profileButton = createSidebarButton("My Profile");
+        fitnessButton = createSidebarButton("Fitness Activity");
+        goalButton = createSidebarButton("Goals");
+        logoutButton = createSidebarButton("Logout");
+
+        // Add components to the sidebar
+        sidebarButtonsPanel.add(kuIcon);
+        sidebarButtonsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        sidebarButtonsPanel.add(profileButton);
+        sidebarButtonsPanel.add(fitnessButton);
+        sidebarButtonsPanel.add(goalButton);
+
+        leftPanel.add(sidebarButtonsPanel, BorderLayout.NORTH);
+        leftPanel.add(logoutButton, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Sets up the main content area with a CardLayout for switching views.
+     */
+    private void setupCardPanel() {
+        rightPanel = new JPanel(new BorderLayout());
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
+
+        // Add sub-panels for each section
+        cardPanel.add(createProfilePanel(), "Profile");
+        cardPanel.add(createFitnessPanel(), "Fitness");
+        cardPanel.add(createGoalPanel(), "Goals");
+        rightPanel.add(cardPanel, BorderLayout.CENTER);
+    }
+
+    /**
+     * Creates a styled button for the sidebar.
+     * @param text The text to display on the button.
+     * @return The styled JButton.
+     */
     private JButton createSidebarButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setForeground(new Color(0, 0, 0));
+        button.setForeground(Color.WHITE);
         button.setBackground(null);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(this);
@@ -109,35 +118,37 @@ public class UserPage extends JFrame implements ActionListener {
         return button;
     }
 
+    /**
+     * Creates the Profile Panel with user details and actions.
+     * @return JPanel representing the Profile view.
+     */
     private JPanel createProfilePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(134, 244, 238));
-        panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-    
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
         JLabel title = new JLabel("My Profile", SwingConstants.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setForeground(new Color(62, 8, 76));
-        title.setBorder(BorderFactory.createEmptyBorder(0,0,20,0));
-        panel.add(title, BorderLayout.NORTH);
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        
-        // Profile Details Section
-        JPanel detailsPanel = new JPanel(new GridLayout(3, 2, 10, 10)); // Adjust grid layout as needed
+        // User Details Form
+        JPanel detailsPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         detailsPanel.setBackground(new Color(134, 244, 238));
-    
+
         idtf = createTextField(user.getId(), "User Id");
+        idtf.setEditable(false);
         nametf = createTextField(user.getName(), "Full Name");
+        nametf.setEditable(false);
         emailtf = createTextField(user.getEmail(), "Email");
+        emailtf.setEditable(false);
         phonetf = createTextField(user.getPhoneNumber(), "Phone Number");
+        phonetf.setEditable(false);
         addresstf = createTextField(user.getAddress(), "Address");
-        passtf = new JPasswordField(user.getPassword());
-        passtf.setBorder(BorderFactory.createTitledBorder("Password"));
+        addresstf.setEditable(false);
+        passtf = createPasswordField(user.getPassword(), "Password");
         passtf.setEditable(false);
-    
-        JTextField progressField = new JTextField("Calories Burned: " + user.getTotalCaloriesBurned());
-        progressField.setBorder(BorderFactory.createTitledBorder("Progress"));
-        progressField.setEditable(false);
-    
+
         detailsPanel.add(idtf);
         detailsPanel.add(nametf);
         detailsPanel.add(emailtf);
@@ -145,98 +156,59 @@ public class UserPage extends JFrame implements ActionListener {
         detailsPanel.add(addresstf);
         detailsPanel.add(passtf);
 
-        // detailsPanel.add(progressField);
-
-        // Buttons Panel with FlowLayout
+        // Action Buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        editButton = new JButton("Edit");
-        editButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        editButton.setForeground(new Color(62, 8, 76));
-        editButton.addActionListener(this);
-        editButton.setMaximumSize(new Dimension(100, 40));
-        saveButton = new JButton("Save");
-        saveButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        saveButton.setForeground(new Color(62, 8, 76));
-        saveButton.addActionListener(this);
-        saveButton.setMaximumSize(new Dimension(100, 40));
+        editButton = createButton("Edit", e -> enableEditing(true));
+        saveButton = createButton("Save", e -> saveChanges());
         saveButton.setEnabled(false);
-    
-        // Button actions
-        editButton.addActionListener(e -> enableEditing(true));
-        saveButton.addActionListener(e -> saveChanges());
-    
+
+        JButton printReportButton = createButton("Print Progress Report", e -> user.generateProgressReport());
+
         buttonPanel.add(editButton);
         buttonPanel.add(saveButton);
-    
-        // Button Section
-        JButton printReportButton = new JButton("Print Progress Report");
-        printReportButton.addActionListener(e -> user.generateProgressReport());
         buttonPanel.add(printReportButton);
-    
+
         panel.add(title, BorderLayout.NORTH);
         panel.add(detailsPanel, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.SOUTH);
-    
+
         return panel;
     }
-    
-    // private JPanel createProfilePanel() {
-    //     JPanel panel = new JPanel();
-    //     panel.setLayout(new BorderLayout());
-    //     panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 
-    
-    //     // Title Label
-    //     JLabel title = new JLabel("My Profile", SwingConstants.CENTER);
-    //     title.setFont(new Font("Segoe UI", Font.BOLD, 24));
-    //     title.setForeground(new Color(62, 8, 76));
-    //     title.setBorder(BorderFactory.createEmptyBorder(0,0,20,0));
-    //     panel.add(title, BorderLayout.NORTH);
-    
-    //     // Text Fields Panel with GridLayout
-    //     JPanel textFieldPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-    //     nametf = createTextField(user.getName(), "Full Name");
-    //     emailtf = createTextField(user.getEmail(), "Email");
-    //     phonetf = createTextField(user.getPhone(), "Phone Number");
-    //     addresstf = createTextField(user.getAddress(), "Address");
-    //     passtf = new JPasswordField(user.getPassword());
-    //     passtf.setBorder(BorderFactory.createTitledBorder("Password"));
-    //     passtf.setEditable(false);
-    
-    //     textFieldPanel.add(nametf);
-    //     textFieldPanel.add(emailtf);
-    //     textFieldPanel.add(phonetf);
-    //     textFieldPanel.add(addresstf);
-    //     textFieldPanel.add(passtf);
-    
-    //     // Buttons Panel with FlowLayout
-    //     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-    //     editButton = new JButton("Edit");
-    //     saveButton = new JButton("Save");
-    //     saveButton.setEnabled(false);
-    
-    //     // Button actions
-    //     editButton.addActionListener(e -> enableEditing(true));
-    //     saveButton.addActionListener(e -> saveChanges());
-    
-    //     buttonPanel.add(editButton);
-    //     buttonPanel.add(saveButton);
-    
-    //     // Add components to Profile Panel
-    //     panel.add(textFieldPanel, BorderLayout.CENTER);
-    //     panel.add(buttonPanel, BorderLayout.SOUTH);
-    
-    //     return panel;
-    // }
-    
-
+    /**
+     * Creates a JTextField with specified text and placeholder.
+     */
     private JTextField createTextField(String text, String placeholder) {
         JTextField textField = new JTextField(text);
         textField.setBorder(BorderFactory.createTitledBorder(placeholder));
-        textField.setEditable(false);
+        textField.setEditable(true);
         return textField;
     }
 
+    /**
+     * Creates a JPasswordField with specified text and placeholder.
+     */
+    private JPasswordField createPasswordField(String text, String placeholder) {
+        JPasswordField passwordField = new JPasswordField(text);
+        passwordField.setBorder(BorderFactory.createTitledBorder(placeholder));
+        passwordField.setEditable(false);
+        return passwordField;
+    }
+
+    /**
+     * Creates a JButton with specified text and ActionListener.
+     */
+    private JButton createButton(String text, ActionListener action) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setForeground(new Color(62, 8, 76));
+        button.addActionListener(action);
+        return button;
+    }
+
+    /**
+     * Enables or disables editing of user profile fields.
+     */
     private void enableEditing(boolean editable) {
         nametf.setEditable(editable);
         emailtf.setEditable(editable);
@@ -248,231 +220,295 @@ public class UserPage extends JFrame implements ActionListener {
         saveButton.setEnabled(editable);
     }
 
+    /**
+     * Saves the changes made to the user profile.
+     */
     private void saveChanges() {
-        // Save updated info to the user object
-        user.setName(nametf.getText());
-        user.setEmail(emailtf.getText());
-        user.setPhone(phonetf.getText());
-        user.setAddress(addresstf.getText());
-        user.setPassword(new String(passtf.getPassword()));
-
-        // Disable editing
-        enableEditing(false);
-
-        JOptionPane.showMessageDialog(this, "Profile updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            user.setName(nametf.getText());
+            user.setEmail(emailtf.getText());
+            user.setPhone(phonetf.getText());
+            user.setAddress(addresstf.getText());
+            user.setPassword(new String(passtf.getPassword()));
+            enableEditing(false);
+            JOptionPane.showMessageDialog(this, "Profile upKUDated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to upKUDate profile. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
+    /**
+     * Creates the Fitness Activity Panel.
+     * @return JPanel representing the Fitness view.
+     */
     private JPanel createFitnessPanel() {
-        // JPanel panel = new JPanel();
-        // panel.setBackground(new Color(204, 229, 255));
-        // panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        // JLabel title = new JLabel("Fitness Activity", SwingConstants.CENTER);
-        // title.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        // title.setForeground(new Color(62, 8, 76));
-        // title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBackground(new Color(204, 229, 255));
-        panel.setBorder(BorderFactory.createEmptyBorder(0,20,20,20));
-
+        JPanel fitnessPanel = new JPanel(new BorderLayout());
+        fitnessPanel.setBackground(new Color(200, 255, 200));
+        fitnessPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     
-        JLabel title = new JLabel("Fitness Activity", SwingConstants.CENTER);
+        // Title label
+        JLabel title = new JLabel("Fitness Activities", SwingConstants.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setForeground(new Color(62, 8, 76));
-        title.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-        
-        // Table for displaying activities
-        String[] columnNames = {"Name", "Duration", "Calories Burned", "Date", "Time"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable activityTable = new JTable(tableModel);
-        JScrollPane tableScrollPane = new JScrollPane(activityTable);
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+    
+        // Table for displaying fitness activities
+        String[] columns = {"Name", "Duration", "Calories Burned", "KUDate", "Time"};
+        DefaultTableModel tableModel = new DefaultTableModel(columns, 0);
+        JTable fitnessTable = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(fitnessTable);
     
         // Buttons for managing activities
-        JButton addButton = new JButton("Add Activity");
-        JButton editButton = new JButton("Edit Activity");
-        JButton deleteButton = new JButton("Delete Activity");
+        JPanel buttonPanel = createButtonPanel(tableModel, fitnessTable);
     
+        // Add components to the panel
+        fitnessPanel.add(title, BorderLayout.NORTH);
+        fitnessPanel.add(tableScrollPane, BorderLayout.CENTER);
+        fitnessPanel.add(buttonPanel, BorderLayout.SOUTH);
+    
+        return fitnessPanel;
+    }
+    
+    // Create button panel with Add, Edit, and Delete buttons
+    private JPanel createButtonPanel(DefaultTableModel tableModel, JTable fitnessTable) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        
+        // Add button
+        JButton addButton = new JButton("Add Activity");
+        addButton.addActionListener(e -> addActivity(tableModel));
+    
+        // Edit button (Functionality can be added)
+        JButton editButton = new JButton("Edit Activity");
+        editButton.addActionListener(e -> editActivity(fitnessTable, tableModel));
+    
+        // Delete button
+        JButton deleteButton = new JButton("Delete Activity");
+        deleteButton.addActionListener(e -> deleteActivity(fitnessTable, tableModel));
+    
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
     
-        // Add Action Listeners for buttons
-        addButton.addActionListener(e -> addActivity(tableModel));
-        editButton.addActionListener(e -> editActivity(activityTable, tableModel));
-        deleteButton.addActionListener(e -> deleteActivity(activityTable, tableModel));
-    
-        // Add components to the panel
-        panel.add(title, BorderLayout.NORTH);
-        panel.add(tableScrollPane, BorderLayout.CENTER);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-    
-        return panel;
+        return buttonPanel;
     }
     
     // Add Activity
     private void addActivity(DefaultTableModel tableModel) {
         JTextField nameField = new JTextField();
-        JTextField durationField = new JTextField();
-        JTextField caloriesField = new JTextField();
-        JDateChooser dateField = new JDateChooser(); // Format: "yyyy-MM-dd"
-        JTextField timeField = new JTextField(); // Format: "hh:mm AM/PM"
         
-        int day, month, year;
-        Calendar calendar = Calendar.getInstance();
-        dateField.setDate(new Date());
-        calendar.setTime(dateField.getDate());
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        month = calendar.get(Calendar.MONTH) + 1; // Months are 0-based in Calendar
-        year = calendar.get(Calendar.YEAR);
+        // Create Duration Panel
+        JPanel durationPanel = new JPanel(new FlowLayout());
+        durationPanel.setSize(200, 30);
+        
+        // Duration Fields
+        JTextField hoursField = createTextField("", "Hours");
+        JTextField minutesField = createTextField("", "Minutes");
+        JTextField secondsField = createTextField("", "Seconds");
+        
+        // Add Duration Fields to Panel
+        durationPanel.add(hoursField);
+        durationPanel.add(minutesField);
+        durationPanel.add(secondsField);
 
+        // Create Calories Field
+        JTextField caloriesField = createTextField("", "Calories Burned");
+
+        // Create Date Field
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setDateFormatString("yyyy-MM-dd");
+
+        // Create Time Button
+        JButton timeButton = new JButton("Select Time");
+        TimePicker timePicker = new TimePicker();
+        timePicker.setBorder(BorderFactory.createTitledBorder("Select Time"));
+
+        // Action Listener for Time Button
+        timeButton.addActionListener(e -> {
+            int result = JOptionPane.showConfirmDialog(this, timePicker, "Select Time", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                // Capture selected time
+                String selectedTime = timePicker.getSelectedTime(); // Assuming TimePicker provides this method
+                timeButton.setText(selectedTime); // Update button text with selected time
+            }
+        });
+
+        // Displaying input fields in dialog
         Object[] message = {
             "Name:", nameField,
-            "Duration (hh mm ss):", durationField,
+            "Duration (Hours, Minutes, Seconds):", durationPanel,
             "Calories Burned:", caloriesField,
-            "Date:", dateField,
-            "Time (hh:mm AM/PM):", timeField
+            "Date:", dateChooser,
+            "Time:", timeButton
         };
-    
+
         int option = JOptionPane.showConfirmDialog(this, message, "Add New Activity", JOptionPane.OK_CANCEL_OPTION);
+        
         if (option == JOptionPane.OK_OPTION) {
             try {
-                String name = nameField.getText();
-                Scanner cin = new Scanner(durationField.getText());
-                int hours, minutes, seconds;
-                hours = cin.nextInt();
-                minutes = cin.nextInt();
-                seconds = cin.nextInt();
-                Time duration = new Time(hours,minutes,seconds);
-                int calories = Integer.parseInt(caloriesField.getText());
-                KUDate date = new KUDate(day, month, year);
-                String time = timeField.getText();
-    
-                Activity activity = new Activity(name, duration, calories, date, time);
-                tableModel.addRow(new Object[]{activity.getName(), activity.getDuration(), activity.getCaloriesBurned(),
-                                                new SimpleDateFormat("yyyy-MM-dd").format(activity.getActivityDate()), activity.getTime()});
+                // Validate and parse input
+                String name = nameField.getText().trim();
+                if (name.isEmpty()) throw new IllegalArgumentException("Activity name is required.");
+
+                // Parse Duration (hours, minutes, seconds)
+                int hours = Integer.parseInt(hoursField.getText().trim());
+                int minutes = Integer.parseInt(minutesField.getText().trim());
+                int seconds = Integer.parseInt(secondsField.getText().trim());
+                Time duration = new Time(hours, minutes, seconds);
+
+                int calories = Integer.parseInt(caloriesField.getText().trim());
+                if (calories <= 0) throw new IllegalArgumentException("Calories must be a positive number.");
+
+                // Parse Date
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(dateChooser.getDate());
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH) + 1; // Calendar months are 0-based
+                int year = calendar.get(Calendar.YEAR);
+                KUDate activityDate = new KUDate(day, month, year);
+
+                // Time validation
+                String time = timeButton.getText();
+                if (time.equals("Select Time")) {
+                    throw new IllegalArgumentException("Time must be selected.");
+                }
+
+                // Create Activity object and add to table
+                Activity activity = new Activity(name, duration, calories, activityDate, time);
+                tableModel.addRow(new Object[]{
+                    activity.getName(), activity.getDuration(), activity.getCaloriesBurned(),
+                    activity.getActivityDate(), activity.getTime()
+                });
+                
+                // Clear input fields
+                nameField.setText("");
+                hoursField.setText("");
+                minutesField.setText("");
+                secondsField.setText("");
+                caloriesField.setText("");
+                dateChooser.setDate(null);
+                timeButton.setText("Select Time");
+                
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Invalid input! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Invalid input!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
     
-    // Edit Activity
-    private void editActivity(JTable activityTable, DefaultTableModel tableModel) {
-        int selectedRow = activityTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "No activity selected!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    
-        String name = (String) tableModel.getValueAt(selectedRow, 0);
-        String duration = (String) tableModel.getValueAt(selectedRow, 1);
-        String calories = tableModel.getValueAt(selectedRow, 2).toString();
-        String date = (String) tableModel.getValueAt(selectedRow, 3);
-        String time = (String) tableModel.getValueAt(selectedRow, 4);
-    
-        JTextField nameField = new JTextField(name);
-        JTextField durationField = new JTextField(duration);
-        JTextField caloriesField = new JTextField(calories);
-        JDateChooser dateField = new JDateChooser();
-        JTextField timeField = new JTextField(time);
-    
-        Object[] message = {
-            "Name:", nameField,
-            "Duration:", durationField,
-            "Calories Burned:", caloriesField,
-            "Date:", dateField,
-            "Time:", timeField
-        };
-    
-        int option = JOptionPane.showConfirmDialog(this, message, "Edit Activity", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            try {
-                tableModel.setValueAt(nameField.getText(), selectedRow, 0);
-                tableModel.setValueAt(durationField.getText(), selectedRow, 1);
-                tableModel.setValueAt(Integer.parseInt(caloriesField.getText()), selectedRow, 2);
-                tableModel.setValueAt(dateField.getDate(), selectedRow, 3);
-                tableModel.setValueAt(timeField.getText(), selectedRow, 4);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Invalid input! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+    // Edit Activity (Placeholder, functionality to be implemented)
+    private void editActivity(JTable fitnessTable, DefaultTableModel tableModel) {
+        // Add logic for editing an activity if needed
     }
     
     // Delete Activity
-    private void deleteActivity(JTable activityTable, DefaultTableModel tableModel) {
-        int selectedRow = activityTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "No activity selected!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+    private void deleteActivity(JTable fitnessTable, DefaultTableModel tableModel) {
+        int selectedRow = fitnessTable.getSelectedRow();
+        if (selectedRow != -1) {
+            tableModel.removeRow(selectedRow);
+            JOptionPane.showMessageDialog(this, "Activity deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No activity selected for deletion.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-        tableModel.removeRow(selectedRow);
     }
 
+    /**
+     * Creates the Goals Panel.
+     * @return JPanel representing the Goals view.
+     */
     private JPanel createGoalPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(new Color(204, 255, 204));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JPanel goalPanel = new JPanel(new BorderLayout());
+        goalPanel.setBackground(new Color(255, 229, 204));
+        goalPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel title = new JLabel("Goals", SwingConstants.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setForeground(new Color(62, 8, 76));
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        panel.add(Box.createRigidArea(new Dimension(0, 20)));
-        panel.add(title);
-        return panel;
+        // Goal list
+        DefaultTableModel goalTableModel = new DefaultTableModel(new String[]{"Goal", "Target", "Progress"}, 0);
+        JTable goalTable = new JTable(goalTableModel);
+        JScrollPane goalScrollPane = new JScrollPane(goalTable);
+
+        // Input fields for adding goals
+        JPanel goalInputPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        goalInputPanel.setBackground(new Color(255, 229, 204));
+
+        JTextField goalField = createTextField("", "Goal Description");
+        JTextField targetField = createTextField("", "Target Value");
+        JTextField progressField = createTextField("", "Current Progress");
+
+        goalInputPanel.add(goalField);
+        goalInputPanel.add(targetField);
+        goalInputPanel.add(progressField);
+
+        // Add and Remove Goal Buttons
+        JPanel goalButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JButton addGoalButton = createButton("Add Goal", e -> {
+            try {
+                String goal = goalField.getText();
+                int target = Integer.parseInt(targetField.getText());
+                int progress = Integer.parseInt(progressField.getText());
+
+                if (progress > target) {
+                    JOptionPane.showMessageDialog(this, "Progress cannot exceed target!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                goalTableModel.addRow(new Object[]{goal, target, progress});
+                JOptionPane.showMessageDialog(this, "Goal added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                // Clear input fields
+                goalField.setText("");
+                targetField.setText("");
+                progressField.setText("");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Failed to add goal. Check your inputs.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        JButton removeGoalButton = createButton("Remove Selected Goal", e -> {
+            int selectedRow = goalTable.getSelectedRow();
+            if (selectedRow != -1) {
+                goalTableModel.removeRow(selectedRow);
+                JOptionPane.showMessageDialog(this, "Goal removed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No goal selected for removal.", "Warning", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        goalButtonPanel.add(addGoalButton);
+        goalButtonPanel.add(removeGoalButton);
+
+        goalPanel.add(title, BorderLayout.NORTH);
+        goalPanel.add(goalScrollPane, BorderLayout.CENTER);
+        goalPanel.add(goalInputPanel, BorderLayout.WEST);
+        goalPanel.add(goalButtonPanel, BorderLayout.SOUTH);
+
+        return goalPanel;
     }
 
+
+    /**
+     * Handles button actions for navigation and other operations.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         profileButton.setBackground(null);
         fitnessButton.setBackground(null);
         goalButton.setBackground(null);
-        Color deselectedColor = new Color(50, 50, 50);
 
         if (e.getSource() == profileButton) {
             cardLayout.show(cardPanel, "Profile");
             profileButton.setBackground(Color.CYAN);
-            profileButton.setForeground(new Color(62, 8, 76));
-            goalButton.setForeground(deselectedColor);
-            fitnessButton.setForeground(deselectedColor);
         } else if (e.getSource() == fitnessButton) {
             cardLayout.show(cardPanel, "Fitness");
             fitnessButton.setBackground(Color.CYAN);
-            profileButton.setForeground(deselectedColor);
-            fitnessButton.setForeground(new Color(62, 8, 76));
-            goalButton.setForeground(deselectedColor);
-
-
         } else if (e.getSource() == goalButton) {
             cardLayout.show(cardPanel, "Goals");
             goalButton.setBackground(Color.CYAN);
-            goalButton.setForeground(new Color(62, 8, 76));
-            profileButton.setForeground(deselectedColor);
-            fitnessButton.setForeground(deselectedColor);
-        }
-
-        else if (e.getSource() == logoutButton) {
-            int choice = JOptionPane.showConfirmDialog(
-                this,
-                "Are you sure you want to log out?",
-                "Logout Confirmation",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-            );
-        
-            if (choice == JOptionPane.YES_OPTION) {
-                // Proceed to logout
-                SignIn SignInFrame = new SignIn();
-                SignInFrame.setVisible(true);
-                SignInFrame.pack();
-                SignInFrame.setLocationRelativeTo(null); 
-                this.dispose();
-            }
-            // If NO is selected, do nothing and return to the current frame
+        } else if (e.getSource() == logoutButton) {
+            this.dispose(); // Close current frame
+            new SignIn().setVisible(true); // Redirect to login page
         }
     }
 }
