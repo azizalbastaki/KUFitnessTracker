@@ -149,4 +149,8 @@ public class User extends Account {
     public int getTotalCaloriesBurned() {
         return totalCaloriesBurned;
     }
+    
+    public void addActivity(Activity newActivity) {
+        activities.add(newActivity);
+    } 
 }
