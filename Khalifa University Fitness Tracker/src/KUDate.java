@@ -10,6 +10,13 @@ public class KUDate
 		this.month=month;
 		this.year=year;
 	}
+
+	public KUDate(String str) {
+		this.day = Integer.parseInt(str.substring(0, 2));
+		this.month = Integer.parseInt(str.substring(2, 4));
+		this.year = Integer.parseInt(str.substring(4, 8));
+	}
+	
 	public void setDate(int date,int month,int year)
 	{
 		this.day=date;
