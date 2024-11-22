@@ -22,6 +22,17 @@ public class User extends Account {
         this.goals = new ArrayList<>();
         id = generateUniqueId();
     }
+
+    public User (String id, String name, String email, String password, KUDate birthdate, String phoneNumber, String address) {
+        super(name, password);
+        this.birthdate = birthdate;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
+        this.activities = new ArrayList<>();
+        this.goals = new ArrayList<>();
+        this.id = id;
+    }
         
     public User(String name, String password, KUDate birthdate, String phoneNumber, String email, String address, Activity[] activities, Goal[] goals) {
         super(name, password);
@@ -149,7 +160,7 @@ public class User extends Account {
     public int getTotalCaloriesBurned() {
         return totalCaloriesBurned;
     }
-    
+
     public void addActivity(Activity newActivity) {
         activities.add(newActivity);
     } 
