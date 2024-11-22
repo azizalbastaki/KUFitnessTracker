@@ -164,4 +164,10 @@ public class User extends Account {
     public void addActivity(Activity newActivity) {
         activities.add(newActivity);
     } 
+
+    @Override
+    public String toString() {
+        return id + "|" + getName() + "|" + email + "|" + getPassword() + "|" + birthdate + "|" + phoneNumber + "|" + address + "|" + totalCaloriesBurned + "|";
+    }
+
 }
