@@ -16,7 +16,7 @@ public class KUDate
 		this.month = Integer.parseInt(str.substring(2, 4));
 		this.year = Integer.parseInt(str.substring(4, 8));
 	}
-	
+
 	public void setDate(int date,int month,int year)
 	{
 		this.day=date;
@@ -43,7 +43,7 @@ public class KUDate
 	}
 	public String toString() 
 	{
-    	return day + "/" + month + "/" + year;
+		return String.format("%d%d%d", day, month, year);
 	}
 
 }
