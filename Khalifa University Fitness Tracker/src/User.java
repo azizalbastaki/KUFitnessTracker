@@ -150,6 +150,9 @@ public class User extends Account {
     public List<Goal> getGoals() {
         return goals;
     }
+    public String getId() {
+        return id;
+    }
 
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
