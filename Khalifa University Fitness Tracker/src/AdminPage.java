@@ -111,50 +111,26 @@ public class AdminPage extends JFrame implements ActionListener {
     }
 
     private JPanel createUserPanel() {
-    JPanel panel = new JPanel(new BorderLayout());
-    JLabel title = new JLabel("User Management", SwingConstants.CENTER);
-    title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+    	JPanel panel = new JPanel(new BorderLayout());
+        JLabel title = new JLabel("User Management", SwingConstants.CENTER);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
-    // Updated column names to include only Name, Activity History, and Goals
-    String[] columnNames = {"Name", "Activity History", "Goals"};
-    DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-    JTable userTable = new JTable(tableModel);
-    JScrollPane scrollPane = new JScrollPane(userTable);
+        // Updated column names to include only Name, Activity History, and Goals
+        String[] columnNames = {"Name", "Activity History", "Goals"};
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable userTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(userTable);
 
-    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-    JButton addUserButton = new JButton("Add User");
-    JButton editUserButton = new JButton("Edit User");
-    JButton deleteUserButton = new JButton("Delete User");
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JButton addUserButton = new JButton("Add User");
+        JButton editUserButton = new JButton("Edit User");
+        JButton deleteUserButton = new JButton("Delete User");
 
-    // Add User functionality
-    addUserButton.addActionListener(e -> {
-        JTextField nameField = new JTextField();
-        JTextField activityField = new JTextField();
-        JTextField goalsField = new JTextField();
-
-        Object[] message = {
-            "Name:", nameField, 
-            "Activity History:", activityField, 
-            "Goals:", goalsField
-        };
-
-        int option = JOptionPane.showConfirmDialog(this, message, "Add User", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            tableModel.addRow(new Object[]{nameField.getText(), activityField.getText(), goalsField.getText()});
-        }
-    });
-
-    // Edit User functionality
-    editUserButton.addActionListener(e -> {
-        int selectedRow = userTable.getSelectedRow();
-        if (selectedRow >= 0) {
-            String name = (String) tableModel.getValueAt(selectedRow, 0);
-            String activity = (String) tableModel.getValueAt(selectedRow, 1);
-            String goals = (String) tableModel.getValueAt(selectedRow, 2);
-
-            JTextField nameField = new JTextField(name);
-            JTextField activityField = new JTextField(activity);
-            JTextField goalsField = new JTextField(goals);
+        // Add User functionality
+        addUserButton.addActionListener(e -> {
+            JTextField nameField = new JTextField();
+            JTextField activityField = new JTextField();
+            JTextField goalsField = new JTextField();
 
             Object[] message = {
                 "Name:", nameField, 
@@ -162,36 +138,60 @@ public class AdminPage extends JFrame implements ActionListener {
                 "Goals:", goalsField
             };
 
-            int option = JOptionPane.showConfirmDialog(this, message, "Edit User", JOptionPane.OK_CANCEL_OPTION);
+            int option = JOptionPane.showConfirmDialog(this, message, "Add User", JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
-                tableModel.setValueAt(nameField.getText(), selectedRow, 0);
-                tableModel.setValueAt(activityField.getText(), selectedRow, 1);
-                tableModel.setValueAt(goalsField.getText(), selectedRow, 2);
+                tableModel.addRow(new Object[]{nameField.getText(), activityField.getText(), goalsField.getText()});
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "No user selected.");
-        }
-    });
+        });
 
-    // Delete User functionality
-    deleteUserButton.addActionListener(e -> {
-        int selectedRow = userTable.getSelectedRow();
-        if (selectedRow >= 0) {
-            tableModel.removeRow(selectedRow);
-        } else {
-            JOptionPane.showMessageDialog(this, "No user selected.");
-        }
-    });
+        // Edit User functionality
+        editUserButton.addActionListener(e -> {
+            int selectedRow = userTable.getSelectedRow();
+            if (selectedRow >= 0) {
+                String name = (String) tableModel.getValueAt(selectedRow, 0);
+                String activity = (String) tableModel.getValueAt(selectedRow, 1);
+                String goals = (String) tableModel.getValueAt(selectedRow, 2);
 
-    buttonPanel.add(addUserButton);
-    buttonPanel.add(editUserButton);
-    buttonPanel.add(deleteUserButton);
+                JTextField nameField = new JTextField(name);
+                JTextField activityField = new JTextField(activity);
+                JTextField goalsField = new JTextField(goals);
 
-    panel.add(title, BorderLayout.NORTH);
-    panel.add(scrollPane, BorderLayout.CENTER);
-    panel.add(buttonPanel, BorderLayout.SOUTH);
+                Object[] message = {
+                    "Name:", nameField, 
+                    "Activity History:", activityField, 
+                    "Goals:", goalsField
+                };
 
-    return panel;
+                int option = JOptionPane.showConfirmDialog(this, message, "Edit User", JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    tableModel.setValueAt(nameField.getText(), selectedRow, 0);
+                    tableModel.setValueAt(activityField.getText(), selectedRow, 1);
+                    tableModel.setValueAt(goalsField.getText(), selectedRow, 2);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No user selected.");
+            }
+        });
+
+        // Delete User functionality
+        deleteUserButton.addActionListener(e -> {
+            int selectedRow = userTable.getSelectedRow();
+            if (selectedRow >= 0) {
+                tableModel.removeRow(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(this, "No user selected.");
+            }
+        });
+
+        buttonPanel.add(addUserButton);
+        buttonPanel.add(editUserButton);
+        buttonPanel.add(deleteUserButton);
+
+        panel.add(title, BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        return panel;
     }
 
     @Override
