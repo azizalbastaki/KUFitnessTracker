@@ -9,43 +9,37 @@ public class User extends Account {
     private String address;
     private String id;
     private int totalCaloriesBurned;
-    private List<Activity> activities = new ArrayList<>();
-    private List<Goal> goals = new ArrayList<>();
-    
-    public User (String name, String email, String password, KUDate birthdate, String phoneNumber, String address) {
-        super(name, password);
-        this.birthdate = birthdate;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.activities = new ArrayList<>();
-        this.goals = new ArrayList<>();
-        id = generateUniqueId();
-    }
+    private List<String> activityHistory;
+    private List<String> goals;
 
-    public User (String id, String name, String email, String password, KUDate birthdate, String phoneNumber, String address, int totalCaloriesBurned) {
+    // Existing constructor
+    public User(String name, String email, String password, KUDate birthdate, String phoneNumber, String address) {
         super(name, password);
+        this.email = email;
         this.birthdate = birthdate;
         this.phoneNumber = phoneNumber;
-        this.email = email;
         this.address = address;
-        this.activities = new ArrayList<>();
+        this.activityHistory = new ArrayList<>();
         this.goals = new ArrayList<>();
-        this.id = id;
-        this.totalCaloriesBurned = totalCaloriesBurned;
-    }
-        
-    public User(String name, String password, KUDate birthdate, String phoneNumber, String email, String address, Activity[] activities, Goal[] goals) {
-        super(name, password);
-        this.birthdate = birthdate;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
+        this.id = generateUniqueId();
         this.totalCaloriesBurned = 0;
-        this.activities = new ArrayList<>(Arrays.asList(activities));
-        this.goals = new ArrayList<>(Arrays.asList(goals));
     }
 
+    // New constructor with explicit ID
+    public User(String id, String name, String email, String phoneNumber, String address, String password, 
+                List<String> activityHistory, List<String> goals) {
+        super(name, password);
+        this.id = id;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.activityHistory = new ArrayList<>(activityHistory);
+        this.goals = new ArrayList<>(goals);
+        this.totalCaloriesBurned = 0;
+        this.birthdate = null; // Default value if birthdate is not passed
+    }
+
+    // Existing methods remain unchanged
     private static String generateUniqueId() {
         int currentId = 1000; // Default starting ID
         File file = new File(ID_FILE);
@@ -73,105 +67,90 @@ public class User extends Account {
     }
 
     private static void writeIdToFile(int id) throws IOException {
-        PrintWriter writer = new PrintWriter(ID_FILE);
-        writer.write(String.valueOf(id));
-        writer.close();
-    }
-
-    public void generateProgressReport() {
-        String fileName = this.id + "_Progress_Report.txt"; // Unique file for each user
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            // Write user information and progress data to the file
-            writer.println("Progress Report for User: " + getEmail());
-            writer.println("User ID: " + this.id);
-            writer.println("Total Calories Burned: " + this.totalCaloriesBurned);
-            writer.println("\nFitness Activities:");
-            if (activities.isEmpty()) {
-                writer.println("No activities logged yet.");
-            } else {
-                for (Activity activity : activities) {
-                    writer.println("- " + activity);
-                }
-            }
-            writer.println("\nGoals:");
-            if (goals.isEmpty()) {
-                writer.println("No goals set yet.");
-            } else {
-                for (Goal goal : goals) {
-                    writer.println("- " + goal);
-                }
-            }
-            writer.println("\nThank you for using the KU Fitness Tracker!");
-            System.out.println("Progress report saved as: " + fileName); // Confirmation message
-        } catch (IOException e) {
-            System.err.println("Error generating progress report: " + e.getMessage());
+        try (PrintWriter writer = new PrintWriter(ID_FILE)) {
+            writer.write(String.valueOf(id));
         }
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public KUDate getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(KUDate birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhone(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public List<Activity> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
-    }
-
-    public List<Goal> getGoals() {
-        return goals;
-    }
+    // Getters and Setters
     public String getId() {
         return id;
     }
 
-    public void setGoals(List<Goal> goals) {
+    public List<String> getActivityHistory() {
+        return activityHistory;
+    }
+
+    public void setActivityHistory(List<String> activityHistory) {
+        this.activityHistory = activityHistory;
+    }
+
+    public List<String> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<String> goals) {
         this.goals = goals;
     }
-    public void logCalories(int calories) {
-        this.totalCaloriesBurned += calories;
-    }
-    public int getTotalCaloriesBurned() {
-        return totalCaloriesBurned;
-    }
 
-    public void addActivity(Activity newActivity) {
-        activities.add(newActivity);
-    } 
-
-    @Override
-    public String toString() {
-        return id + "|" + getName() + "|" + email + "|" + getPassword() + "|" + birthdate + "|" + phoneNumber + "|" + address + "|" + totalCaloriesBurned + "|";
+    public void addActivity(String activity) {
+        if (activity != null && !activity.isEmpty()) {
+            activityHistory.add(activity);
+        }
     }
 
+    public void addGoal(String goal) {
+        if (goal != null && !goal.isEmpty()) {
+            goals.add(goal);
+        }
+    }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public KUDate getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(KUDate birthdate) {
+		this.birthdate = birthdate;
+	}
+
+	public int getTotalCaloriesBurned() {
+		return totalCaloriesBurned;
+	}
+
+	public void setTotalCaloriesBurned(int totalCaloriesBurned) {
+		this.totalCaloriesBurned = totalCaloriesBurned;
+	}
+
+	public static String getIdFile() {
+		return ID_FILE;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }
