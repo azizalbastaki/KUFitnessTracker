@@ -1,0 +1,3 @@
+Goals Progress Report:
+
+Goal: 123 | Target: 123 | Progress: 111 | Status: Pending | Progress: [#########-] 90%

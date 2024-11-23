@@ -1,0 +1,17 @@
+START_USER
+Name|435r
+Email|asd@asd.com
+Password|asdasd123
+Birthdate|2024-11-01
+PhoneNumber|1231231231
+Address|123123123
+START_GOAL
+Description|asd
+TargetValue|123
+Progress|122
+StartDate|2024-11-01
+EndDate|2024-11-02
+Status|Pending
+END_GOAL
+
+END_USER
