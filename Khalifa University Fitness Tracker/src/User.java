@@ -23,7 +23,7 @@ public class User extends Account {
         id = generateUniqueId();
     }
 
-    public User (String id, String name, String email, String password, KUDate birthdate, String phoneNumber, String address) {
+    public User (String id, String name, String email, String password, KUDate birthdate, String phoneNumber, String address, int totalCaloriesBurned) {
         super(name, password);
         this.birthdate = birthdate;
         this.phoneNumber = phoneNumber;
@@ -32,6 +32,7 @@ public class User extends Account {
         this.activities = new ArrayList<>();
         this.goals = new ArrayList<>();
         this.id = id;
+        this.totalCaloriesBurned = totalCaloriesBurned;
     }
         
     public User(String name, String password, KUDate birthdate, String phoneNumber, String email, String address, Activity[] activities, Goal[] goals) {
