@@ -109,6 +109,7 @@ public class Database {
                 }
             } else if (line.equals("START_ACTIVITY")) {
                 currentActivityData = new ArrayList<>();
+                System.out.println(currentActivityData);
             } else if (line.equals("END_ACTIVITY")) {
                 if (currentActivityData != null) {
                     Activity activity = deserializeActivity(currentActivityData);
@@ -123,6 +124,7 @@ public class Database {
                     System.out.println(line);
                 } else if (currentActivityData != null) {
                     currentActivityData.add(line);
+                    System.out.println(line);
                 }
             }
         }
@@ -175,13 +177,12 @@ public class Database {
         Map<String, String> activityData = new HashMap<>();
         for (String line : lines) {
             String[] parts = line.split("\\|", 2);
-            if (parts.length == 2) {
-                activityData.put(parts[0], parts[1]);
-            }
+            activityData.put(parts[0], parts[1]);
+            System.out.println(activityData);
         }
         System.out.println(activityData);
         return new Activity(
-            activityData.get("Name"),
+            activityData.get("ActivityName"),
             Time.fromString(activityData.get("Duration")),  // Assuming Time.fromString is correct
             Integer.parseInt(activityData.get("CaloriesBurned")),
             KUDate.fromString(activityData.get("ActivityDate")),
