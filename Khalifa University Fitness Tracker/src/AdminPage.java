@@ -4,13 +4,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class AdminPage extends JFrame implements ActionListener {
-    private JPanel left, right, cardPanel;
+    private JPanel leftPanel, rightPanel, cardPanel;
     private JButton activityButton, userButton, logoutButton;
     private CardLayout cardLayout;
-
-    // Admin credentials
-    private static final String ADMIN_NAME = "admin";
-    private static final String ADMIN_PASSWORD = "admin2023";
 
     public AdminPage() {
         initComponents();
@@ -23,47 +19,65 @@ public class AdminPage extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Left Panel (Sidebar)
-        left = new JPanel();
-        left.setBackground(new Color(62, 8, 76));
-        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-        left.setPreferredSize(new Dimension(250, getHeight()));
+        // Left Sidebar
+        setupSidebar();
+
+        // Right Panel with Card Layout
+        setupCardPanel();
+
+        // Add Panels to Frame
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.CENTER);
+
+        setVisible(true);
+    }
+
+    private void setupSidebar() {
+        leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setBackground(new Color(62, 8, 76));
+        leftPanel.setPreferredSize(new Dimension(250, getHeight()));
+
+        // Sidebar Buttons Panel
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+        buttonsPanel.setBackground(new Color(62, 8, 76));
+
+        JLabel kuLogo = new JLabel(new ImageIcon("KU logo22.jpg"));
+        kuLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        kuLogo.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
 
         activityButton = createSidebarButton("Activity Management");
         userButton = createSidebarButton("User Management");
         logoutButton = createSidebarButton("Logout");
 
-        left.add(Box.createRigidArea(new Dimension(0, 20)));
-        left.add(activityButton);
-        left.add(userButton);
-        left.add(Box.createVerticalGlue());
-        left.add(logoutButton);
+        buttonsPanel.add(kuLogo);
+        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        buttonsPanel.add(activityButton);
+        buttonsPanel.add(userButton);
+        buttonsPanel.add(Box.createVerticalGlue());
 
-        // Right Panel (Main Content Area)
-        right = new JPanel();
+        leftPanel.add(buttonsPanel, BorderLayout.NORTH);
+        leftPanel.add(logoutButton, BorderLayout.SOUTH);
+    }
+
+    private void setupCardPanel() {
+        rightPanel = new JPanel(new BorderLayout());
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Adding sub-panels to cardPanel
+        // Add panels for different sections
         cardPanel.add(createActivityPanel(), "Activity");
         cardPanel.add(createUserPanel(), "User");
 
-        right.setLayout(new BorderLayout());
-        right.add(cardPanel, BorderLayout.CENTER);
-
-        // Adding panels to frame
-        add(left, BorderLayout.WEST);
-        add(right, BorderLayout.CENTER);
-
-        setVisible(true);
+        rightPanel.add(cardPanel, BorderLayout.CENTER);
     }
 
     private JButton createSidebarButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("Segoe UI", Font.BOLD, 14));
         button.setForeground(Color.WHITE);
-        button.setBackground(new Color(62, 8, 76));
-        button.setFocusPainted(false);
+        button.setBackground(null);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(this);
         button.setMaximumSize(new Dimension(200, 50));
         return button;
@@ -71,22 +85,28 @@ public class AdminPage extends JFrame implements ActionListener {
 
     private JPanel createActivityPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel title = new JLabel("Activity Management", SwingConstants.CENTER);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
+        // Title Label
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel title = new JLabel("Activity Management");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titlePanel.add(title);
+
+        // Table for activities
         String[] columnNames = {"Activity Name", "User", "Status"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable activityTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(activityTable);
+        JTable table = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(table);
 
+        // Buttons Panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         JButton approveButton = new JButton("Approve");
         JButton rejectButton = new JButton("Reject");
-        buttonPanel.add(approveButton);
-        buttonPanel.add(rejectButton);
+        JButton searchButton = new JButton("Search");
 
+        // Add action listeners to the buttons
         approveButton.addActionListener(e -> {
-            int selectedRow = activityTable.getSelectedRow();
+            int selectedRow = table.getSelectedRow();
             if (selectedRow >= 0) {
                 tableModel.setValueAt("Approved", selectedRow, 2);
             } else {
@@ -95,7 +115,7 @@ public class AdminPage extends JFrame implements ActionListener {
         });
 
         rejectButton.addActionListener(e -> {
-            int selectedRow = activityTable.getSelectedRow();
+            int selectedRow = table.getSelectedRow();
             if (selectedRow >= 0) {
                 tableModel.setValueAt("Rejected", selectedRow, 2);
             } else {
@@ -103,92 +123,68 @@ public class AdminPage extends JFrame implements ActionListener {
             }
         });
 
-        panel.add(title, BorderLayout.NORTH);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        searchButton.addActionListener(e -> {
+            String searchName = JOptionPane.showInputDialog(this, "Enter Activity Name or User to Search:", "Search", JOptionPane.QUESTION_MESSAGE);
+            if (searchName != null && !searchName.trim().isEmpty()) {
+                boolean found = false;
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    String activityName = tableModel.getValueAt(i, 0).toString();
+                    String userName = tableModel.getValueAt(i, 1).toString();
+
+                    if (activityName.equalsIgnoreCase(searchName.trim()) || userName.equalsIgnoreCase(searchName.trim())) {
+                        found = true;
+                        JOptionPane.showMessageDialog(this, "Found: " + activityName + " by " + userName, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                        table.setRowSelectionInterval(i, i);
+                        break;
+                    }
+                }
+                if (!found) {
+                    JOptionPane.showMessageDialog(this, "No matching activity or user found.", "Search Result", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+
+        // Add buttons to the button panel
+        buttonPanel.add(approveButton);
+        buttonPanel.add(rejectButton);
+        buttonPanel.add(searchButton);
+
+        // Add components to the panel
+        panel.add(titlePanel, BorderLayout.NORTH);
+        panel.add(tableScrollPane, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
         return panel;
     }
 
     private JPanel createUserPanel() {
-    	JPanel panel = new JPanel(new BorderLayout());
-        JLabel title = new JLabel("User Management", SwingConstants.CENTER);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        JPanel panel = new JPanel(new BorderLayout());
 
-        // Updated column names to include only Name, Activity History, and Goals
+        // Title Label
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel title = new JLabel("User Management");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titlePanel.add(title);
+
+        // Table for users
         String[] columnNames = {"Name", "Activity History", "Goals"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable userTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(userTable);
+        JTable table = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(table);
 
+        // Buttons Panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         JButton addUserButton = new JButton("Add User");
         JButton editUserButton = new JButton("Edit User");
         JButton deleteUserButton = new JButton("Delete User");
 
-        // Add User functionality
-        addUserButton.addActionListener(e -> {
-            JTextField nameField = new JTextField();
-            JTextField activityField = new JTextField();
-            JTextField goalsField = new JTextField();
-
-            Object[] message = {
-                "Name:", nameField, 
-                "Activity History:", activityField, 
-                "Goals:", goalsField
-            };
-
-            int option = JOptionPane.showConfirmDialog(this, message, "Add User", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                tableModel.addRow(new Object[]{nameField.getText(), activityField.getText(), goalsField.getText()});
-            }
-        });
-
-        // Edit User functionality
-        editUserButton.addActionListener(e -> {
-            int selectedRow = userTable.getSelectedRow();
-            if (selectedRow >= 0) {
-                String name = (String) tableModel.getValueAt(selectedRow, 0);
-                String activity = (String) tableModel.getValueAt(selectedRow, 1);
-                String goals = (String) tableModel.getValueAt(selectedRow, 2);
-
-                JTextField nameField = new JTextField(name);
-                JTextField activityField = new JTextField(activity);
-                JTextField goalsField = new JTextField(goals);
-
-                Object[] message = {
-                    "Name:", nameField, 
-                    "Activity History:", activityField, 
-                    "Goals:", goalsField
-                };
-
-                int option = JOptionPane.showConfirmDialog(this, message, "Edit User", JOptionPane.OK_CANCEL_OPTION);
-                if (option == JOptionPane.OK_OPTION) {
-                    tableModel.setValueAt(nameField.getText(), selectedRow, 0);
-                    tableModel.setValueAt(activityField.getText(), selectedRow, 1);
-                    tableModel.setValueAt(goalsField.getText(), selectedRow, 2);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "No user selected.");
-            }
-        });
-
-        // Delete User functionality
-        deleteUserButton.addActionListener(e -> {
-            int selectedRow = userTable.getSelectedRow();
-            if (selectedRow >= 0) {
-                tableModel.removeRow(selectedRow);
-            } else {
-                JOptionPane.showMessageDialog(this, "No user selected.");
-            }
-        });
-
         buttonPanel.add(addUserButton);
         buttonPanel.add(editUserButton);
         buttonPanel.add(deleteUserButton);
 
-        panel.add(title, BorderLayout.NORTH);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        // Add components to the panel
+        panel.add(titlePanel, BorderLayout.NORTH);
+        panel.add(tableScrollPane, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
         return panel;
