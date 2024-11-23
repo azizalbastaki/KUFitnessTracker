@@ -227,7 +227,7 @@ public class UserPage extends JFrame implements ActionListener {
         try {
             user.setName(nametf.getText());
             user.setEmail(emailtf.getText());
-            user.setPhone(phonetf.getText());
+            user.setPhoneNumber(phonetf.getText());
             user.setAddress(addresstf.getText());
             user.setPassword(new String(passtf.getPassword()));
             enableEditing(false);
