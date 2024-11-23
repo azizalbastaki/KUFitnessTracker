@@ -19,7 +19,7 @@ public class database {
             String address = getElementFromLine(entry, 7);
             int totalBurned = Integer.parseInt(getElementFromLine(entry, 8));
             String userID = Integer.toString(currentID);
-            users.add(new User(userID, name, email, password, userBD, pNumber, address));
+            users.add(new User(userID, name, email, password, userBD, pNumber, address, totalBurned));
         }
         scanner.close();
     }
