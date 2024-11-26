@@ -4,10 +4,10 @@ public class Activity
 	private Time duration;
 	private int caloriesBurned;
 	private KUDate activityDate;
-	private String time;
+	private Time time;
 	public Activity(){}
 	
-	public Activity(String name2, Time duration, int calories, KUDate date2, String time2) {
+	public Activity(String name2, Time duration, int calories, KUDate date2, Time time2) {
 		this.name=name2;
 		this.duration=duration;
 		this.caloriesBurned=calories;
@@ -38,10 +38,10 @@ public class Activity
 	public void setActivityDate(KUDate activityDate) {
 		this.activityDate = activityDate;
 	}
-	public String getTime() {
+	public Time getTime() {
 		return time;
 	}
-	public void setTime(String time) {
+	public void setTime(Time time) {
 		this.time = time;
 	}
 	@Override
