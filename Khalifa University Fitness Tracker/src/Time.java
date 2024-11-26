@@ -10,6 +10,14 @@ public class Time
 		this.minutes=minutes;
 		this.seconds=seconds;
 	}
+
+	public Time(String time) {
+		String[] parts = time.split(":");
+		this.hours = Integer.parseInt(parts[0]);
+		this.minutes = Integer.parseInt(parts[1]);
+		this.seconds = Integer.parseInt(parts[2]);
+	}
+	
 	public void setTime(int hours,int minutes,int seconds)
 	{
 		this.hours=hours;
