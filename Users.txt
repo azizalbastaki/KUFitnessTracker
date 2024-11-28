@@ -1,0 +1,124 @@
+START_USER
+ID|KU1016
+Name|asd
+Email|asd@asd.com
+Password|asdasd123
+Birthdate|2024-11-02
+PhoneNumber|123123123
+Address|123213123
+
+START_GOAL
+Description|Walking 10k steps
+TargetValue|10000
+Progress|1000
+StartDate|2024-11-06
+EndDate|2024-11-13
+Status|pending
+END_GOAL
+START_ACTIVITY
+ActivityName|Walking
+Duration|01:00:00
+CaloriesBurned|145
+ActivityDate|2024-11-06
+Time|01:29 AM
+Stat|Approved
+END_ACTIVITY
+
+END_USER
+START_USER
+ID|KU1017
+Name|Abd Alrahman Ismaik
+Email|100064692@ku.ac.ae
+Password|asdasd123
+Birthdate|2005-02-10
+PhoneNumber|0508586187
+Address|Abu Dhabi
+
+START_GOAL
+Description|Run 5km
+TargetValue|5000
+Progress|2000
+StartDate|2024-11-01
+EndDate|2024-11-05
+Status|rejected
+END_GOAL
+START_GOAL
+Description|Swim 5 Hours
+TargetValue|5
+Progress|4
+StartDate|2024-11-08
+EndDate|2024-11-15
+Status|approved
+END_GOAL
+START_ACTIVITY
+ActivityName|Running
+Duration|01:00:00
+CaloriesBurned|500
+ActivityDate|2024-11-08
+Time|07:00 AM
+Stat|Approved
+END_ACTIVITY
+START_ACTIVITY
+ActivityName|Swimming
+Duration|00:30:00
+CaloriesBurned|200
+ActivityDate|2024-11-07
+Time|03:00 PM
+Stat|Approved
+END_ACTIVITY
+
+END_USER
+START_USER
+ID|KU1017
+Name|Ali Alshamsi
+Email|100064693@ku.ac.ae
+Password|asdasd123
+Birthdate|2004-03-27
+PhoneNumber|0508586155
+Address|Al Ain
+
+START_GOAL
+Description|Run 10km
+TargetValue|10000
+Progress|9000
+StartDate|2024-11-01
+EndDate|2024-11-05
+Status|pending
+END_GOAL
+START_GOAL
+Description|Swim 10 Hours
+TargetValue|10
+Progress|2
+StartDate|2024-11-08
+EndDate|2024-11-15
+Status|pending
+END_GOAL
+START_ACTIVITY
+ActivityName|Running
+Duration|02:00:00
+CaloriesBurned|1000
+ActivityDate|2024-11-08
+Time|07:00 AM
+Stat|Approved
+END_ACTIVITY
+START_ACTIVITY
+ActivityName|Swimming
+Duration|00:45:00
+CaloriesBurned|250
+ActivityDate|2024-11-07
+Time|03:00 PM
+Stat|Approved
+END_ACTIVITY
+
+END_USER
+START_USER
+ID|KU1018
+Name|Abdulaziz
+Email|100064528@ku.ac.ae
+Password|asdasd123
+Birthdate|2004-02-15
+PhoneNumber|0508521964
+Address|Dubai
+
+
+END_USER
