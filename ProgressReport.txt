@@ -1,4 +1,0 @@
-Goals Progress Report:
-
-Goal: 123 | Target: 123 | Progress: 122 | Status: 2024-11-01 | Progress: [#########-] 99%
-Goal: 432 | Target: 34 | Progress: 12 | Status: 2024-11-09 | Progress: [###-------] 35%
