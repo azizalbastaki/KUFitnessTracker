@@ -27,7 +27,7 @@ public class UserPage extends JFrame implements ActionListener {
      * Constructor: Initializes the UserPage frame and components.
      */
     public UserPage() {
-        user = (User) Main.users.get(Main.idx); // Simulated user object from Main
+        user = (User) Main.getUsers().get(Main.getIdx()); // Simulated user object from Main
         initComponents();
     }
 
@@ -933,7 +933,7 @@ public class UserPage extends JFrame implements ActionListener {
             cardLayout.show(cardPanel, "Goals");
             goalButton.setBackground(Color.CYAN);
         } else if (e.getSource() == logoutButton) {
-            Database.saveUsers(Main.users);
+            Database.saveUsers(Main.getUsers());
             this.dispose(); // Close current frame
             SignIn SignInFrame = new SignIn();        // Redirect to login page
             SignInFrame.setVisible(true);
