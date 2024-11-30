@@ -38,38 +38,39 @@ public class User extends Account {
         this.id = id;
     }
 
-    // Validation logic for email
     public void setEmail(String email) {
-        if (email == null || email.isEmpty()) {
+        if (email == null || email.trim().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be null or empty.");
+        }
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw new IllegalArgumentException("Invalid email format.");
         }
         this.email = email;
     }
-
-    // Validation logic for phone number
+    
     public void setPhone(String phoneNumber) {
-        if (phoneNumber == null || phoneNumber.isEmpty()) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
             throw new IllegalArgumentException("Phone number cannot be null or empty.");
+        }
+        if (!phoneNumber.matches("\\d{10,15}")) {
+            throw new IllegalArgumentException("Phone number must contain 10 to 15 digits.");
         }
         this.phoneNumber = phoneNumber;
     }
-
-    // Validation logic for birthdate
+    
     public void setBirthdate(KUDate birthdate) {
         if (birthdate == null) {
             throw new IllegalArgumentException("Birthdate cannot be null.");
         }
         this.birthdate = birthdate;
     }
-
-    // Validation logic for address
+    
     public void setAddress(String address) {
-        if (address == null || address.isEmpty()) {
+        if (address == null || address.trim().isEmpty()) 
             throw new IllegalArgumentException("Address cannot be null or empty.");
-        }
         this.address = address;
     }
-
+    
     // Validation for total calories burned
     public void logCalories(int calories) {
         if (calories < 0) {
