@@ -9,7 +9,6 @@ public class SignIn extends JFrame implements ActionListener {
     private JLabel kuicon, leftH1, copyright, rightH1, emailLabel, passLabel, signUpLabel, separator1, separator2;
     private JTextField emailtf;
     private JPasswordField passtf;
-    private int idx;
 
     // Class constructor
     public SignIn() {
@@ -155,8 +154,8 @@ public class SignIn extends JFrame implements ActionListener {
             for (int i = 0; i < Main.getUsers().size(); i++) {
                 User user = Main.getUsers().get(i);
                 if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
-                    Main.idx = i;
-                    Main.checked = true;
+                    Main.setIdx(i);
+                    Main.setChecked(true);
                     userFound = true;
                     break;
                 }
