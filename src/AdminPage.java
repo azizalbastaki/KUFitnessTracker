@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -114,9 +116,15 @@ public class AdminPage extends JFrame implements ActionListener {
         searchField.setBorder(BorderFactory.createTitledBorder("Search by Name: "));
         JButton searchButton = new JButton("Search");
 
-        searchButton.addActionListener(e -> searchUser(searchField.getText(), tableModel));
+        searchButton.addActionListener(e -> {
+            try {
+                searchUser(searchField.getText(), tableModel);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel, "Error occurred while searching users: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         searchPanel.add(searchField);
-        searchPanel.add(searchButton);  
+        searchPanel.add(searchButton);
 
         JPanel north = new JPanel();
         north.setLayout(new BoxLayout(north, BoxLayout.Y_AXIS));
@@ -124,15 +132,20 @@ public class AdminPage extends JFrame implements ActionListener {
         north.add(searchPanel);
 
         // Load users from the database
-        List<User> userList = Main.getUsers();
-        for (User user : userList) {
-            tableModel.addRow(new Object[]{
-                user.getName(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getAddress(),
-                user.getBirthdate().toString()
-            });
+        List<User> userList = new ArrayList<>();
+        try {
+            userList = Main.getUsers();
+            for (User user : userList) {
+                tableModel.addRow(new Object[]{
+                    user.getName(),
+                    user.getEmail(),
+                    user.getPhoneNumber(),
+                    user.getAddress(),
+                    user.getBirthdate().toString()
+                });
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(panel, "Error loading users: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         // Buttons Panel
@@ -143,146 +156,170 @@ public class AdminPage extends JFrame implements ActionListener {
 
         // Add User Logic
         addUserButton.addActionListener(e -> {
-            JTextField nameField = new JTextField();
-            JTextField emailField = new JTextField();
-            JTextField passwordField = new JTextField();
-            JTextField phoneField = new JTextField();
-            JTextField addressField = new JTextField();
-            JDateChooser bdCalender = new JDateChooser();
+            try {
+                JTextField nameField = new JTextField();
+                JTextField emailField = new JTextField();
+                JTextField passwordField = new JTextField();
+                JTextField phoneField = new JTextField();
+                JTextField addressField = new JTextField();
+                JDateChooser bdCalender = new JDateChooser();
 
-            Object[] message = {
-                "Name:", nameField,
-                "Email:", emailField,
-                "Password:", passwordField,
-                "Phone Number:", phoneField,
-                "Address:", addressField,
-                "Date of Birth:", bdCalender
-            };
+                Object[] message = {
+                    "Name:", nameField,
+                    "Email:", emailField,
+                    "Password:", passwordField,
+                    "Phone Number:", phoneField,
+                    "Address:", addressField,
+                    "Date of Birth:", bdCalender
+                };
 
-            int option = JOptionPane.showConfirmDialog(panel, message, "Add User", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                String name = nameField.getText().trim();
-                String email = emailField.getText().trim();
-                String password = passwordField.getText().trim();
-                String phone = phoneField.getText().trim();
-                String address = addressField.getText().trim();
-                KUDate birthdate = null;
+                int option = JOptionPane.showConfirmDialog(panel, message, "Add User", JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    String name = nameField.getText().trim();
+                    String email = emailField.getText().trim();
+                    String password = passwordField.getText().trim();
+                    String phone = phoneField.getText().trim();
+                    String address = addressField.getText().trim();
+                    KUDate birthdate = null;
 
-                if (bdCalender.getDate() != null) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(bdCalender.getDate());
-                    birthdate = new KUDate(calendar.get(Calendar.DAY_OF_MONTH),
-                                        calendar.get(Calendar.MONTH) + 1, 
-                                        calendar.get(Calendar.YEAR));
+                    if (bdCalender.getDate() != null) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(bdCalender.getDate());
+                        birthdate = new KUDate(calendar.get(Calendar.DAY_OF_MONTH),
+                                calendar.get(Calendar.MONTH) + 1,
+                                calendar.get(Calendar.YEAR));
+                    }
+
+                    if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() &&
+                            !phone.isEmpty() && !address.isEmpty() && birthdate != null) {
+                        User newUser = new User(name, email, password, birthdate, phone, address);
+
+                        // Add user to list and save to database
+                        Main.addUser(newUser);
+                        Database.saveUsers(Main.getUsers()); // Added try-catch for saving database
+
+                        // Update the table
+                        tableModel.addRow(new Object[]{
+                            newUser.getName(),
+                            newUser.getEmail(),
+                            newUser.getPhoneNumber(),
+                            newUser.getAddress(),
+                            newUser.getBirthdate().toString()
+                        });
+
+                        JOptionPane.showMessageDialog(panel, "User added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(panel, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-
-                if (!name.isEmpty() && !email.isEmpty() && !password.isEmpty() &&
-                    !phone.isEmpty() && !address.isEmpty() && birthdate != null) {
-                    User newUser = new User(name, email, password, birthdate, phone, address);
-
-                    // Add user to list and save to database
-                    userList.add(newUser);
-                    
-                    // Update the table
-                    tableModel.addRow(new Object[]{
-                        newUser.getName(),
-                        newUser.getEmail(),
-                        newUser.getPhoneNumber(),
-                        newUser.getAddress(),
-                        newUser.getBirthdate().toString()
-                    });
-
-                    JOptionPane.showMessageDialog(panel, "User added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(panel, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel, "Error occurred while adding user: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         editUserButton.addActionListener(e -> {
-            int selectedRow = userTable.getSelectedRow(); // Assuming 'userTable' is the JTable
-            if (selectedRow >= 0) {
-                // Get user details from the table
-                String selectedEmail = (String) tableModel.getValueAt(selectedRow, 1); // Assuming email is in column 1
-                User selectedUser = userList.stream().filter(user -> user.getEmail().equals(selectedEmail)).findFirst().orElse(null);
+            try {
+                int selectedRow = userTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    // Get user details from the table
+                    String selectedEmail = (String) tableModel.getValueAt(selectedRow, 1); // Assuming email is in column 1
+                    User selectedUser = Main.getUsers().stream().filter(user -> user.getEmail().equals(selectedEmail)).findFirst().orElse(null);
         
-                if (selectedUser != null) {
-                    JTextField nameField = new JTextField(selectedUser.getName());
-                    JTextField emailField = new JTextField(selectedUser.getEmail());
-                    JTextField passwordField = new JTextField(selectedUser.getPassword());
-                    JTextField phoneField = new JTextField(selectedUser.getPhoneNumber());
-                    JTextField addressField = new JTextField(selectedUser.getAddress());
-                    JDateChooser dateChooser = new JDateChooser();
-                    try {
-                        String date = selectedUser.getBirthdate().toString();
-                        java.util.Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-                        dateChooser.setDate(date2);
-                    } catch (Exception s) {
-                        System.out.println(s);
-                    }
-                    Object[] message = {
-                        "Name:", nameField,
-                        "Email:", emailField,
-                        "Password:", passwordField,
-                        "Phone Number:", phoneField,
-                        "Address:", addressField,
-                        "Date of Birth:", dateChooser
-                    };
+                    if (selectedUser != null) {
+                        JTextField nameField = new JTextField(selectedUser.getName());
+                        JTextField emailField = new JTextField(selectedUser.getEmail());
+                        JTextField passwordField = new JTextField(selectedUser.getPassword());
+                        JTextField phoneField = new JTextField(selectedUser.getPhoneNumber());
+                        JTextField addressField = new JTextField(selectedUser.getAddress());
+                        JDateChooser dateChooser = new JDateChooser();
         
-                    int option = JOptionPane.showConfirmDialog(panel, message, "Edit User", JOptionPane.OK_CANCEL_OPTION);
-                    if (option == JOptionPane.OK_OPTION) {
-                        // Update user details
-                        selectedUser.setName(nameField.getText().trim());
-                        selectedUser.setEmail(emailField.getText().trim());
-                        selectedUser.setPassword(passwordField.getText().trim());
-                        selectedUser.setPhone(phoneField.getText().trim());
-                        selectedUser.setAddress(addressField.getText().trim());
-        
-                        if (dateChooser.getDate() != null) {
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.setTime(dateChooser.getDate());
-                            selectedUser.setBirthdate(new KUDate(
-                                calendar.get(Calendar.DAY_OF_MONTH),
-                                calendar.get(Calendar.MONTH) + 1,
-                                calendar.get(Calendar.YEAR)));
+                        try {
+                            String date = selectedUser.getBirthdate().toString();
+                            java.util.Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+                            dateChooser.setDate(date2);
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(panel, "Error parsing date: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
         
-                        // Update database and table
-                        Database.saveUsers(userList);
-                        tableModel.setValueAt(selectedUser.getName(), selectedRow, 0);
-                        tableModel.setValueAt(selectedUser.getPhoneNumber(), selectedRow, 2);
-                        tableModel.setValueAt(selectedUser.getAddress(), selectedRow, 3);
-                        tableModel.setValueAt(selectedUser.getBirthdate().toString(), selectedRow, 4);
+                        Object[] message = {
+                            "Name:", nameField,
+                            "Email:", emailField,
+                            "Password:", passwordField,
+                            "Phone Number:", phoneField,
+                            "Address:", addressField,
+                            "Date of Birth:", dateChooser
+                        };
         
-                        JOptionPane.showMessageDialog(panel, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        int option = JOptionPane.showConfirmDialog(panel, message, "Edit User", JOptionPane.OK_CANCEL_OPTION);
+                        if (option == JOptionPane.OK_OPTION) {
+                            selectedUser.setName(nameField.getText().trim());
+                            selectedUser.setEmail(emailField.getText().trim());
+                            selectedUser.setPassword(passwordField.getText().trim());
+                            selectedUser.setPhone(phoneField.getText().trim());
+                            selectedUser.setAddress(addressField.getText().trim());
+        
+                            if (dateChooser.getDate() != null) {
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(dateChooser.getDate());
+                                selectedUser.setBirthdate(new KUDate(
+                                        calendar.get(Calendar.DAY_OF_MONTH),
+                                        calendar.get(Calendar.MONTH) + 1,
+                                        calendar.get(Calendar.YEAR)));
+                            }
+        
+                            try {
+                                Database.saveUsers(Main.getUsers()); // Save updated user list to the database
+                                tableModel.setValueAt(selectedUser.getName(), selectedRow, 0);
+                                tableModel.setValueAt(selectedUser.getPhoneNumber(), selectedRow, 2);
+                                tableModel.setValueAt(selectedUser.getAddress(), selectedRow, 3);
+                                tableModel.setValueAt(selectedUser.getBirthdate().toString(), selectedRow, 4);
+        
+                                JOptionPane.showMessageDialog(panel, "User updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(panel, "Error saving changes: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(panel, "Please select a user to edit.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(panel, "Please select a user to edit.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel, "Unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         
         
+        
         deleteUserButton.addActionListener(e -> {
-            int selectedRow = userTable.getSelectedRow(); // Assuming 'userTable' is the JTable
-            if (selectedRow >= 0) {
-                int confirm = JOptionPane.showConfirmDialog(panel, "Are you sure you want to delete this user?", "Delete User", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    String selectedEmail = (String) tableModel.getValueAt(selectedRow, 1); // Assuming email is in column 1
-                    User selectedUser = userList.stream().filter(user -> user.getEmail().equals(selectedEmail)).findFirst().orElse(null);
+            try {
+                int selectedRow = userTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    int confirm = JOptionPane.showConfirmDialog(panel, "Are you sure you want to delete this user?", "Delete User", JOptionPane.YES_NO_OPTION);
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        String selectedEmail = (String) tableModel.getValueAt(selectedRow, 1); // Assuming email is in column 1
+                        User selectedUser = Main.getUsers().stream().filter(user -> user.getEmail().equals(selectedEmail)).findFirst().orElse(null);
         
-                    if (selectedUser != null) {
-                        userList.remove(selectedUser); // Remove from user list
-                        Database.saveUsers(userList); // Update database
-                        tableModel.removeRow(selectedRow); // Remove from table
+                        if (selectedUser != null) {
+                            Main.getUsers().remove(selectedUser); // Remove from user list
         
-                        JOptionPane.showMessageDialog(panel, "User deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            try {
+                                Database.saveUsers(Main.getUsers()); // Save updated list to the database
+                                tableModel.removeRow(selectedRow); // Remove from table
+        
+                                JOptionPane.showMessageDialog(panel, "User deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(panel, "Error saving changes to database: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(panel, "Please select a user to delete.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(panel, "Please select a user to delete.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel, "Unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        });        
+        });
+        
 
 
         buttonPanel.add(addUserButton);
@@ -373,7 +410,7 @@ public class AdminPage extends JFrame implements ActionListener {
         manageActivitiesButton.addActionListener(e -> {
             int selectedRow = userTable.getSelectedRow();
             if (selectedRow >= 0) {
-                selectedUser = userList.get(selectedRow);
+                selectedUser = Main.getUsers().get(selectedRow);
                 // Populate activities table
                 loadActivitiesIntoTable(activityModel);
                 cardLayout2.show(mainPanel2, "ActivitiesManagementCard");
@@ -385,7 +422,7 @@ public class AdminPage extends JFrame implements ActionListener {
         manageGoalsButton.addActionListener(e -> {
             int selectedRow = userTable.getSelectedRow();
             if (selectedRow >= 0) {
-                selectedUser = userList.get(selectedRow);
+                selectedUser = Main.getUsers().get(selectedRow);
                 // Populate goals table
                 loadGoalsIntoTable(goalsModel);
                 cardLayout2.show(mainPanel2, "ManageGoalsCard");
@@ -1132,7 +1169,7 @@ public class AdminPage extends JFrame implements ActionListener {
                 JOptionPane.YES_NO_OPTION
             );
             if (choice == JOptionPane.YES_OPTION) {
-                Database.saveUsers(Main.users);
+                Database.saveUsers(Main.getUsers());
                 this.dispose();
                 SignIn SignInFrame = new SignIn();
                 SignInFrame.setVisible(true);
