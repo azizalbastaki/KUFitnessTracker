@@ -12,7 +12,6 @@ public class SignUp extends JFrame implements ActionListener {
     private JLabel kuicon, leftH1, copyright, rightH1, nameLabel, emailLabel, bdLabel, phoneLabel, addressLabel, passLabel, signInLabel, separator1, separator2;
     private JTextField nametf, emailtf, phonetf, addresstf, passtf;
     private JDateChooser bdCalender;
-    private User newUser;
 
     // Class constructor
     public SignUp() {
